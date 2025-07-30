@@ -1,5 +1,5 @@
 function AuthRegister() {
-  return <div>Login</div>;
+  return <div>register</div>;
 }
 
 export default AuthRegister;

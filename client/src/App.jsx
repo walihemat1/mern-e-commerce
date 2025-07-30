@@ -13,14 +13,14 @@ function App() {
     <div className="flex flex-col overflow-hidden">
       <Routes>
         <Route path="/auth" element={<AuthLayout />}>
-          <Route path="/login" element={<AuthLogin />} />
-          <Route path="/register" element={<AuthRegister />} />
+          <Route path="login" element={<AuthLogin />} />
+          <Route path="register" element={<AuthRegister />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="/dashboard" element={<AdminDashboard />} />
-          <Route path="/orders" element={<AdminOrders />} />
-          <Route path="/products" element={<AdminProducts />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="products" element={<AdminProducts />} />
         </Route>
       </Routes>
     </div>
