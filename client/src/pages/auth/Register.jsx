@@ -5,7 +5,7 @@ import { registerFormControls } from "@/config";
 import Form from "@/ui/Form";
 
 const initialState = {
-  userName: "",
+  username: "",
   email: "",
   password: "",
 };

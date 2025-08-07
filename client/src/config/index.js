@@ -1,6 +1,6 @@
 export const registerFormControls = [
   {
-    name: "userName",
+    name: "username",
     label: "Username",
     placeholder: "Enter your username",
     componentType: "input",
@@ -25,7 +25,7 @@ export const registerFormControls = [
 export const loginFormControls = [
   {
     name: "email",
-    label: "Username",
+    label: "Email",
     placeholder: "Enter your email",
     componentType: "input",
     type: "text",

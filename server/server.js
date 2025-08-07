@@ -1,8 +1,10 @@
-import express from "express";
-import mongoose from "mongoose";
-import env from "dotenv";
-import cors from "cors";
-import cookieParser from "cookie-parser";
+const express = require("express");
+const mongoose = require("mongoose");
+const env = require("dotenv");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
+const userRoutes = require("./routes/userRoutes");
 
 env.config();
 
@@ -30,5 +32,11 @@ app.use(
 );
 
 app.use(cookieParser());
+app.use(express.json());
 
-app.listen();
+// routes
+app.use("/api/user", userRoutes);
+
+app.use("*");
+
+app.listen(PORT, () => console.log(`app is listening on ${PORT}`));
