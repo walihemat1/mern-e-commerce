@@ -13,7 +13,11 @@ const initialState = {
 function AuthRegister() {
   const [formData, setFormData] = useState(initialState);
 
-  const submitHandler = () => {};
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    setFormData(initialState);
+  };
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
@@ -26,7 +30,9 @@ function AuthRegister() {
           <Link
             className="font-medium ml-2 text-primary hover:underline"
             to="/auth/login"
-          ></Link>
+          >
+            Login
+          </Link>
         </p>
       </div>
 
