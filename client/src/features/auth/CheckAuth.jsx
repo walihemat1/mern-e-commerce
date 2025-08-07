@@ -1,9 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, Navigate } from "react-router-dom";
 
 function CheckAuth({ isAuthenticated, user, children }) {
   const location = useLocation();
-
-  const navigate = useNavigate();
 
   if (
     !isAuthenticated &&
@@ -12,7 +10,7 @@ function CheckAuth({ isAuthenticated, user, children }) {
       location.pathname.includes("register")
     )
   ) {
-    return navigate("/auth/login");
+    return <Navigate to="/auth/login" />;
   }
 
   if (
@@ -20,8 +18,8 @@ function CheckAuth({ isAuthenticated, user, children }) {
     (location.pathname.includes("login") ||
       location.pathname.includes("register"))
   ) {
-    if (user?.role === "admin") return navigate("/admin/dashboard");
-    if (user?.role === "user") return navigate("/shop/home");
+    if (user?.role === "admin") return <Navigate to="/admin/dashboard" />;
+    if (user?.role === "user") return <Navigate to="/shop/home" />;
   }
 
   if (
@@ -29,11 +27,15 @@ function CheckAuth({ isAuthenticated, user, children }) {
     user?.role !== "admin" &&
     location.pathname.includes("admin")
   ) {
-    return navigate("/unauth-page");
+    return <Navigate to="/unauth-page" />;
   }
 
-  if (isAuthenticated && user?.role === "admin") {
-    return navigate("/admin/dashboard");
+  if (
+    isAuthenticated &&
+    user?.role === "admin" &&
+    location.pathname.includes("shop")
+  ) {
+    return <Navigate to="/admin/dashboard" />;
   }
 
   return <>{children}</>;
