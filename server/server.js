@@ -1,17 +1,12 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const env = require("dotenv");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
-const userRoutes = require("./routes/userRoutes");
+import { connectDB } from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
 
-env.config();
-
-mongoose
-  .connect(process.env.LOCAL_DB)
-  .then(() => console.log("DB connected successfully!"))
-  .catch((err) => console.log(err));
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -37,6 +32,10 @@ app.use(express.json());
 // routes
 app.use("/api/user", userRoutes);
 
-app.use("*");
-
-app.listen(PORT, () => console.log(`app is listening on ${PORT}`));
+connectDB(process.env.LOCAL_MONGO_DB_URL)
+  .then(() => {
+    console.log(`App is listening on port ${PORT}`);
+  })
+  .catch((error) => {
+    process.exit(1);
+  });
