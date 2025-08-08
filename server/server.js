@@ -4,7 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config/db.js";
-import userRoutes from "./routes/userRoutes.js";
+import userRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // routes
-app.use("/api/user", userRoutes);
+app.use("/api/auth", userRouter);
 
 connectDB(process.env.LOCAL_MONGO_DB_URL)
   .then(() => {

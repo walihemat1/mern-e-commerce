@@ -2,7 +2,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
-//register
+//route: /api/auth/register
+// desc: create a new user
 const registerUser = async (req, res) => {
   const { username, email, password } = req.body;
 
