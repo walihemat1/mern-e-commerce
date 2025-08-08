@@ -4,16 +4,16 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config/db.js";
-import userRouter from "./routes/authRoutes.js";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
-
+// app.use(cors());
 app.use(
   cors({
-    origin: "https://localhost:5173/",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: [
       "Content-Type",
@@ -27,14 +27,19 @@ app.use(
 );
 
 app.use(cookieParser());
+
+// using express.json() will allow us to get the data from the http body like req.body
 app.use(express.json());
 
+// urlencoded will allow us to send form data
+app.use(express.urlencoded({ extended: true }));
+
 // routes
-app.use("/api/auth", userRouter);
+app.use("/api/auth", authRouter);
 
 connectDB(process.env.LOCAL_MONGO_DB_URL)
   .then(() => {
-    console.log(`App is listening on port ${PORT}`);
+    app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
   })
   .catch((error) => {
     process.exit(1);

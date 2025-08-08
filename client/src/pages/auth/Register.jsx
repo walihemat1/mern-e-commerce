@@ -1,20 +1,43 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useToast } from "@/hooks/use-toast";
 
+import { registerUser } from "../../features/auth/authSlice";
 import { registerFormControls } from "@/config";
 import Form from "@/ui/Form";
 
 const initialState = {
-  username: "",
-  email: "",
-  password: "",
+  username: "ahmad",
+  email: "ahmad@gmail.com",
+  password: "12345",
 };
 
 function AuthRegister() {
   const [formData, setFormData] = useState(initialState);
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+
   const submitHandler = (e) => {
     e.preventDefault();
+
+    dispatch(registerUser(formData))
+      .then((data) => {
+        if (data?.payload?.status) {
+          toast({
+            title: data?.payload?.message || "User was created successfully!",
+          });
+          navigate("/auth/login");
+        } else {
+          toast({
+            title: data?.payload?.message || "Something went wrong!",
+            variant: "destructive",
+          });
+        }
+      })
+      .catch((err) => console.log(err));
 
     setFormData(initialState);
   };

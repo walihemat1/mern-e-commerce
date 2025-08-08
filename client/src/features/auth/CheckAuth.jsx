@@ -15,11 +15,12 @@ function CheckAuth({ isAuthenticated, user, children }) {
 
   if (
     isAuthenticated &&
-    (location.pathname.includes("login") ||
-      location.pathname.includes("register"))
+    (location.pathname.includes("/login") ||
+      location.pathname.includes("/register"))
   ) {
+    console.log(location.pathname);
     if (user?.role === "admin") return <Navigate to="/admin/dashboard" />;
-    if (user?.role === "user") return <Navigate to="/shop/home" />;
+    if (user?.role === "user") return <Navigate to="/shop/listing" />;
   }
 
   if (

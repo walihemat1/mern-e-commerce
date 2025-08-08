@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import Form from "@/ui/Form";
 import { loginFormControls } from "../../config/index";
+import { useDispatch } from "react-redux";
+import { checkAuth, loginUser, setUser } from "@/features/auth/authSlice";
+import { toast } from "@/hooks/use-toast";
 
 const initialState = {
   email: "",
@@ -12,10 +15,39 @@ const initialState = {
 function AuthLogin() {
   const [formData, setFormData] = useState(initialState);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const submitHandler = (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    dispatch(loginUser(formData))
+      .then((data) => {
+        if (data.payload?.status) {
+          toast({
+            title: "Logged in successfully!",
+          });
+
+          // dispatch(setUser({ ...data?.payload?.data?.user }));
+
+          if (data?.payload?.data?.user?.role === "admin")
+            return navigate("/admin/dashboard");
+          if (data?.payload?.data?.user?.role === "user")
+            return navigate("/shop/home");
+        } else {
+          toast({
+            title: data.payload?.message,
+            variant: "destructive",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      });
   };
 
   return (
