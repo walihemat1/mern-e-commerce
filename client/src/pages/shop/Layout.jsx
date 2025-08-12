@@ -1,5 +1,11 @@
-function ShoppingLayout() {
-  return <div>Shopping Layout</div>;
+import { Outlet } from "react-router-dom";
+
+function ShoppingLayout({ children }) {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
 }
 
 export default ShoppingLayout;

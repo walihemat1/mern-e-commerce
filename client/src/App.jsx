@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { checkAuth } from "./features/auth/authSlice";
-
 import AuthLayout from "./features/auth/Layout";
 import AuthLogin from "./pages/auth/Login";
 import AuthRegister from "./pages/auth/Register";
@@ -21,36 +21,37 @@ import CheckAuth from "./features/auth/CheckAuth";
 import UnAuthPage from "./pages/UnAuthPage";
 
 function App() {
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
 
-  useEffect(
-    function () {
-      dispatch(checkAuth());
-    },
-    [dispatch]
-  );
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <Skeleton className="h-[600px] w-[600px] rounded-full" />; // block routes until auth check finishes
+  }
 
   return (
     <div className="flex flex-col overflow-hidden">
       <Routes>
-        <Route
-          path="/auth"
-          element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
-              <AuthLayout />
-            </CheckAuth>
-          }
-        >
+        {/* Public auth routes */}
+        <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
 
+        {/* Admin protected routes */}
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              allowedRoles={["admin"]}
+            >
               <AdminLayout />
             </CheckAuth>
           }
@@ -60,10 +61,15 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
         </Route>
 
+        {/* User protected routes */}
         <Route
           path="/shop"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              allowedRoles={["user"]}
+            >
               <ShoppingLayout />
             </CheckAuth>
           }

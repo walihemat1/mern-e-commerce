@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: null,
   isLoading: false,
   user: null,
+  error: null,
 };
 
 export const registerUser = createAsyncThunk(
@@ -124,7 +125,6 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
-        state.error = action.payload?.message;
       });
   },
 });
