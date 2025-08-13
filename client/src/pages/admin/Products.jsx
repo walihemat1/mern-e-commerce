@@ -1,5 +1,7 @@
+import Products from "@/features/admin/Products";
+
 function AdminProducts() {
-  return <div>Admin Orders</div>;
+  return <Products />;
 }
 
 export default AdminProducts;
