@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
+import adminProductRouter from "./routes/productRoutes.js";
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use("/api/auth", authRouter);
+app.use("/api/admin/products", adminProductRouter);
 
 connectDB(process.env.LOCAL_MONGO_DB_URL)
   .then(() => {
