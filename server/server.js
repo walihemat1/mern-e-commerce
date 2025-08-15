@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use("/api/auth", authRouter);
-app.use("/api/admin/products", adminProductRouter);
+app.use("/api/admin/product", adminProductRouter);
 
 connectDB(process.env.LOCAL_MONGO_DB_URL)
   .then(() => {

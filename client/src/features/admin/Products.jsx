@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { addProductsFromElements } from "@/config";
 import Form from "@/ui/Form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 
 const initialState = {
@@ -26,11 +26,20 @@ function Products() {
   const [addProductData, setAddProductData] = useState(initialState);
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
+  const [isImageLoading, setIsImageLoadin] = useState(false);
 
   const submitHandler = (e) => {
     e.preventDefault();
     console.log(addProductData);
   };
+
+  useEffect(
+    function () {
+      setAddProductData({ ...addProductData, image: uploadedImageUrl });
+    },
+
+    [uploadedImageUrl]
+  );
 
   return (
     <>
@@ -52,6 +61,8 @@ function Products() {
             setFile={setImageFile}
             uploadedImageUrl={uploadedImageUrl}
             setUploadedImageUrl={setUploadedImageUrl}
+            setIsImageLoadin={setIsImageLoadin}
+            isImageLoading={isImageLoading}
           />
           <div className="py-6">
             <Form
@@ -59,7 +70,8 @@ function Products() {
               formData={addProductData}
               setFormData={setAddProductData}
               onSubmit={submitHandler}
-              buttonText="Add Product"
+              buttonText={isImageLoading ? "Loading" : "Add Product"}
+              disabled={isImageLoading}
             />
           </div>
         </SheetContent>

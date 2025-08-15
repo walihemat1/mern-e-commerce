@@ -10,7 +10,14 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
-function Form({ formControls, formData, setFormData, onSubmit, buttonText }) {
+function Form({
+  formControls,
+  formData,
+  setFormData,
+  onSubmit,
+  buttonText,
+  disabled = false,
+}) {
   function renderInputComponentByType(formControlItem) {
     let element = null;
     const value = formData[formControlItem.name] || "";
@@ -114,7 +121,7 @@ function Form({ formControls, formData, setFormData, onSubmit, buttonText }) {
           </div>
         ))}
       </div>
-      <Button type="submit" className="mt-4 w-full">
+      <Button type="submit" className="mt-4 w-full" disabled={disabled}>
         {buttonText || "Submit"}
       </Button>
     </form>

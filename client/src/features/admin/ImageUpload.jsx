@@ -1,10 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import axios from "axios";
 import { FileIcon, UploadCloudIcon, XIcon } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
-function ImageUpload({ file, setFile, uploadedImageUrl, setUploadedImageUrl }) {
+function ImageUpload({
+  file,
+  setFile,
+  uploadedImageUrl,
+  setUploadedImageUrl,
+  setIsImageLoadin,
+  isImageLoading,
+}) {
   const inputRef = useRef(null);
 
   const handleImageFileChange = (e) => {
@@ -18,6 +26,32 @@ function ImageUpload({ file, setFile, uploadedImageUrl, setUploadedImageUrl }) {
       inputRef.current.value = "";
     }
   };
+
+  async function cloudinaryImageUploadHandler() {
+    try {
+      setIsImageLoadin(true);
+      const formData = new FormData();
+      formData.append("my_file", file);
+      const res = await axios.post(
+        "http://localhost:5000/api/admin/product/upload-image",
+        formData,
+        { withCredentials: true }
+      );
+
+      setUploadedImageUrl(res.data.data.url);
+      setIsImageLoadin(false);
+    } catch (error) {
+      console.log(error);
+      setIsImageLoadin(false);
+    }
+  }
+
+  useEffect(
+    function () {
+      if (file !== null) cloudinaryImageUploadHandler();
+    },
+    [file]
+  );
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -44,7 +78,9 @@ function ImageUpload({ file, setFile, uploadedImageUrl, setUploadedImageUrl }) {
               <FileIcon className="w-8 h-8 text-primary mr-2" />
             </div>
 
-            <p className="text-sm font-medium">{file.name}</p>
+            <p className="text-sm font-medium">
+              {isImageLoading ? "Loading" : file.name}
+            </p>
             <Button
               variant="ghost"
               size="icon"
