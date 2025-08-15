@@ -9,6 +9,8 @@ import { addProductsFromElements } from "@/config";
 import Form from "@/ui/Form";
 import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "./productSlice";
 
 const initialState = {
   image: null,
@@ -28,9 +30,13 @@ function Products() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [isImageLoading, setIsImageLoadin] = useState(false);
 
+  const { isLoading } = useSelector((state) => state.product);
+
+  const dispatch = useDispatch();
+
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(addProductData);
+    dispatch(addProduct(addProductData));
   };
 
   useEffect(
