@@ -48,12 +48,23 @@ const createProduct = async (req, res) => {
       price,
       salePrice,
       totalStock,
+      brand,
     });
 
     res.status(200).json({
       status: true,
       message: "Product created successfully!",
-      data: product,
+      data: {
+        id: product._id,
+        image: product.image,
+        title: product.title,
+        description: product.description,
+        category: product.category,
+        price: product.price,
+        salePrice: product.salePrice,
+        totalStock: product.totalStock,
+        brand: product.brand,
+      },
     });
   } catch (error) {
     console.log(error);
