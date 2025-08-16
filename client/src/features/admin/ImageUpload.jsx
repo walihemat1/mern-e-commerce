@@ -38,7 +38,7 @@ function ImageUpload({
         { withCredentials: true }
       );
 
-      setUploadedImageUrl(res.data.data.url);
+      if (res) setUploadedImageUrl(res.data.data.url);
       setIsImageLoadin(false);
     } catch (error) {
       console.log(error);

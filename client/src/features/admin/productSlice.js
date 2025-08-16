@@ -4,27 +4,83 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: false,
+  error: null,
   products: [],
 };
 
 export const addProduct = createAsyncThunk(
-  "add-product",
-  async (productData) => {
+  "products/addProduct",
+  async (productData, { rejectWithValue }) => {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/admin/product",
         productData,
+        {
+          hdears: {
+            "Content-Type": "application/json",
+          },
+        },
         { withCredentials: true }
       );
-      console.log(res);
+      return res.data;
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.data)
+        return rejectWithValue(error.response.data);
+
+      return rejectWithValue({ message: error.message });
+    }
+  }
+);
+
+export const getProducts = createAsyncThunk(
+  "products/getProducts",
+  async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/admin/product");
+      return res?.data;
+    } catch (error) {
+      throw new Error("Something went wrong");
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async ({ productId, productData }) => {
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/admin/product/update/${productId}`,
+        productData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return res?.data;
+    } catch (error) {
+      throw new Error("Something went wrong");
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "products/updateProduct",
+  async ({ productId }) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:5000/api/admin/product/delete/${productId}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      return res?.data;
+    } catch (error) {
+      throw new Error("Something went wrong");
     }
   }
 );
 
 const productSlice = createSlice({
-  name: "product",
+  name: "products",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -34,10 +90,35 @@ const productSlice = createSlice({
       })
       .addCase(addProduct.fulfilled, (state, action) => {
         state.isLoading = false;
-        // products = [action.payload];
       })
       .addCase(addProduct.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.payload?.error || "Something went wrong!";
+      })
+      .addCase(getProducts.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getProducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // products = [action.payload];
+        state.products = [...action.payload.data];
+      })
+      .addCase(getProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload?.error || "Something went wrong!";
+      })
+      .addCase(updateProduct.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // products = [action.payload];
+        state.products = { ...action.payload.data };
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log(action);
+        state.error = action.payload?.error || "Something went wrong!";
       });
   },
 });

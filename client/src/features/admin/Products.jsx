@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "./productSlice";
+import AllProduct from "./AllProduct";
+import { toast } from "@/hooks/use-toast";
 
 const initialState = {
   image: null,
@@ -30,18 +32,33 @@ function Products() {
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [isImageLoading, setIsImageLoadin] = useState(false);
 
-  const { isLoading } = useSelector((state) => state.product);
+  const { isLoading } = useSelector((state) => state.products);
 
   const dispatch = useDispatch();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    dispatch(addProduct(addProductData));
+    const res = await dispatch(addProduct(addProductData)).unwrap();
+
+    if (res?.status) {
+      setAddProductData(initialState);
+      setImageFile(null);
+      setOpenAddProductDialog(false);
+      toast({
+        title: res.message || "Product created!",
+      });
+    } else {
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(
     function () {
-      setAddProductData({ ...addProductData, image: uploadedImageUrl });
+      if (uploadedImageUrl)
+        setAddProductData({ ...addProductData, image: uploadedImageUrl });
     },
 
     [uploadedImageUrl]
@@ -53,6 +70,10 @@ function Products() {
         <Button onClick={() => setOpenAddProductDialog(true)}>
           Add Product
         </Button>
+      </div>
+
+      <div>
+        <AllProduct />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
@@ -76,7 +97,9 @@ function Products() {
               formData={addProductData}
               setFormData={setAddProductData}
               onSubmit={submitHandler}
-              buttonText={isImageLoading ? "Loading" : "Add Product"}
+              buttonText={
+                isImageLoading || isLoading ? "Loading" : "Add Product"
+              }
               disabled={isImageLoading}
             />
           </div>
