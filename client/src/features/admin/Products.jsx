@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "./productSlice";
-import AllProduct from "./AllProduct";
+import AllProduct from "./ProductsList";
 import { toast } from "@/hooks/use-toast";
 
 const initialState = {
@@ -43,10 +43,10 @@ function Products() {
     if (res?.status) {
       setAddProductData(initialState);
       setImageFile(null);
-      setOpenAddProductDialog(false);
       toast({
         title: res.message || "Product created!",
       });
+      setOpenAddProductDialog(false);
     } else {
       toast({
         title: "Something went wrong!",
@@ -66,17 +66,15 @@ function Products() {
 
   return (
     <>
-      <div className="mb-5 flex justify-end w-full">
+      <div className="mb-5  ">
         <Button onClick={() => setOpenAddProductDialog(true)}>
           Add Product
         </Button>
       </div>
 
-      <div>
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         <AllProduct />
       </div>
-
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
 
       <Sheet open={openAddProductDialog} onOpenChange={setOpenAddProductDialog}>
         <SheetContent side="right" className="overflow-auto">
