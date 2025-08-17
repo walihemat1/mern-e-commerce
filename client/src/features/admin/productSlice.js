@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const initialState = {
   isLoading: false,
@@ -16,9 +17,7 @@ export const addProduct = createAsyncThunk(
         "http://localhost:5000/api/admin/product",
         productData,
         {
-          hdears: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         },
         { withCredentials: true }
       );
@@ -63,7 +62,7 @@ export const updateProduct = createAsyncThunk(
 );
 
 export const deleteProduct = createAsyncThunk(
-  "products/updateProduct",
+  "products/deleteProduct",
   async ({ productId }) => {
     try {
       const res = await axios.delete(
@@ -100,7 +99,6 @@ const productSlice = createSlice({
       })
       .addCase(getProducts.fulfilled, (state, action) => {
         state.isLoading = false;
-        // products = [action.payload];
         state.products = [...action.payload.data];
       })
       .addCase(getProducts.rejected, (state, action) => {
@@ -113,7 +111,9 @@ const productSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.isLoading = false;
         // products = [action.payload];
-        state.products = { ...action.payload.data };
+        state.products = state.products.map((p) =>
+          p.id === action.payload.data.id ? action.payload.data : p
+        );
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.isLoading = false;

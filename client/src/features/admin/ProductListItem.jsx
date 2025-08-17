@@ -1,16 +1,10 @@
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 function ProductListItem({ product }) {
   const { image, title, description, price, salePrice } = product;
   return (
     <Card className="w-full max-w-sm mx-auto">
-      <CardHeader></CardHeader>
       <div className="relative">
         <img
           src={image}
@@ -20,7 +14,7 @@ function ProductListItem({ product }) {
       </div>
 
       <CardContent>
-        <h2 className="text-xl font-bold mb-2">{title}</h2>
+        <h2 className="text-xl font-bold mt-2">{title}</h2>
         <div className="flex justify-between items-center mb-2">
           <span
             className={`${
@@ -29,7 +23,9 @@ function ProductListItem({ product }) {
           >
             ${price}
           </span>
-          <span className="text-lg font-bold">${salePrice}</span>
+          {salePrice > 0 ? (
+            <span className="text-lg font-bold">${salePrice}</span>
+          ) : null}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">

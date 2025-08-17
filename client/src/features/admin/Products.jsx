@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
+  SheetHeader,
 } from "@/components/ui/sheet";
 import { addProductsFromElements } from "@/config";
 import Form from "@/ui/Form";
 import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from "./productSlice";
+import { addProduct, getProducts } from "./productSlice";
 import AllProduct from "./ProductsList";
 import { toast } from "@/hooks/use-toast";
 
@@ -31,6 +31,7 @@ function Products() {
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [isImageLoading, setIsImageLoadin] = useState(false);
+  const [currUpdatedProdId, setCurrUpdatedProdId] = useState(null);
 
   const { isLoading } = useSelector((state) => state.products);
 
@@ -41,6 +42,7 @@ function Products() {
     const res = await dispatch(addProduct(addProductData)).unwrap();
 
     if (res?.status) {
+      dispatch(getProducts());
       setAddProductData(initialState);
       setImageFile(null);
       toast({
@@ -66,14 +68,14 @@ function Products() {
 
   return (
     <>
-      <div className="mb-5  ">
+      <div className="mb-5 flex justify-end w-full">
         <Button onClick={() => setOpenAddProductDialog(true)}>
           Add Product
         </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <AllProduct />
+        <AllProduct setCurrUpdatedProdId={setCurrUpdatedProdId} />
       </div>
 
       <Sheet open={openAddProductDialog} onOpenChange={setOpenAddProductDialog}>
