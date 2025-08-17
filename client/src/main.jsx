@@ -7,11 +7,14 @@ import { Toaster } from "./components/ui/toaster";
 import "./index.css";
 import App from "./App.jsx";
 import store from "./store/store";
+import { ProductContextProvider } from "./contexts/ProductsContext";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <ProductContextProvider>
+        <App />
+      </ProductContextProvider>
       <Toaster />
     </Provider>
   </BrowserRouter>
