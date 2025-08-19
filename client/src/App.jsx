@@ -31,14 +31,27 @@ function App() {
   }, [dispatch]);
 
   if (isLoading) {
-    return <Skeleton className="h-[600px] w-[600px] rounded-full" />; // block routes until auth check finishes
+    return (
+      <Skeleton className="h-[60px] w-[60px] rounded-full flex-inline items-center justify-center" />
+    ); // block routes until auth check finishes
   }
 
   return (
     <div className="flex flex-col overflow-hidden">
       <Routes>
         {/* Public auth routes */}
-        <Route path="/auth" element={<AuthLayout />}>
+        <Route
+          path="/auth"
+          element={
+            <CheckAuth
+              isAuthenticated={isAuthenticated}
+              user={user}
+              allowedRoles={["admin", "user"]}
+            >
+              <AuthLayout />
+            </CheckAuth>
+          }
+        >
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>

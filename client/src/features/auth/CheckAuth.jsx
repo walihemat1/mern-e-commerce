@@ -8,10 +8,16 @@ function CheckAuth({ isAuthenticated, user, allowedRoles, children }) {
     return <div>Loading...</div>; // could be spinner
   }
 
+  // If NOT authenticated, allow access to auth routes
   if (!isAuthenticated) {
+    if (
+      location.pathname.startsWith("/auth/login") ||
+      location.pathname.startsWith("/auth/register")
+    ) {
+      return <>{children}</>;
+    }
     return <Navigate to="/auth/login" replace />;
   }
-
   // Role-based check
   if (allowedRoles && !allowedRoles.includes(user?.role)) {
     return <Navigate to="/unauth-page" replace />;

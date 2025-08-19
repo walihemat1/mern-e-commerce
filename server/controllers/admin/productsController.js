@@ -78,7 +78,17 @@ const createProduct = async (req, res) => {
 // get all products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().select([
+      "_id",
+      "image",
+      "title",
+      "description",
+      "price",
+      "salePrice",
+      "totalStock",
+      "brand",
+      "category",
+    ]);
 
     res.status(200).json({
       status: true,
@@ -103,10 +113,20 @@ const getProduct = async (req, res) => {
       message: "Product id is required!",
     });
   try {
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).select([
+      "_id",
+      "image",
+      "title",
+      "description",
+      "price",
+      "salePrice",
+      "totalStock",
+      "brand",
+      "category",
+    ]);
     res.status(200).json({
       status: true,
-      message: "Product with id",
+      message: "Product with id updated!",
       data: product,
     });
   } catch (error) {
@@ -128,7 +148,7 @@ const updateProduct = async (req, res) => {
       message: "Product id is required!",
     });
   try {
-    const productTOBeUpdated = findById(productId);
+    const productTOBeUpdated = await Product.findById(productId);
 
     if (!productTOBeUpdated)
       return res.status(404).json({
@@ -137,13 +157,28 @@ const updateProduct = async (req, res) => {
       });
 
     const image = req.body.image || productTOBeUpdated.image;
-    const title = req.body.title || productTOBeUpdated.title;
-    const price = req.body.price || productTOBeUpdated.price;
-    const salePrice = req.body.salePrice || productTOBeUpdated.salePrice;
-    const description = req.body.description || productTOBeUpdated.description;
-    const totalStock = req.body.totalStock || productTOBeUpdated.totalStock;
-    const category = req.body.category || productTOBeUpdated.category;
-    const brand = req.body.brand || productTOBeUpdated.brand;
+    const title =
+      req.body.title !== "" ? req.body.title : productTOBeUpdated.title;
+    const price =
+      req.body.price !== "" ? req.body.price : productTOBeUpdated.price;
+    const salePrice =
+      req.body.salePrice !== ""
+        ? req.body.salePrice
+        : productTOBeUpdated.salePrice;
+    const description =
+      req.body.description !== ""
+        ? req.body.description
+        : productTOBeUpdated.description;
+    const totalStock =
+      req.body.totalStock !== ""
+        ? req.body.totalStock
+        : productTOBeUpdated.totalStock;
+    const category =
+      req.body.category !== ""
+        ? req.body.category
+        : productTOBeUpdated.category;
+    const brand =
+      req.body.brand !== "" ? req.body.brand : productTOBeUpdated.brand;
 
     const updateProduct = await Product.findByIdAndUpdate(productId, {
       image,
@@ -181,7 +216,7 @@ const deleteProduct = async (req, res) => {
     });
 
   try {
-    const deletedProduct = await Product.findByIdAndUpdate(productId);
+    const deletedProduct = await Product.findByIdAndDelete(productId);
     res.status(200).json({
       status: true,
       message: "Product deleted successfully!",

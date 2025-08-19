@@ -3,7 +3,7 @@ import { getProducts } from "./productSlice";
 import { useEffect } from "react";
 import ProductListItem from "./ProductListItem";
 
-function ProductsList({ setCurrUpdatedProdId }) {
+function ProductsList({ deleteProductHandler }) {
   const dispatch = useDispatch();
   const { products, isLoading } = useSelector((state) => state.products);
 
@@ -19,7 +19,7 @@ function ProductsList({ setCurrUpdatedProdId }) {
         <ProductListItem
           key={product.title}
           product={product}
-          setCurrUpdatedProdId={setCurrUpdatedProdId}
+          deleteProductHandler={deleteProductHandler}
         />
       ))}
     </>

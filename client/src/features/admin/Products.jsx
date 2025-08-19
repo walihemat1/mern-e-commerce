@@ -5,14 +5,16 @@ import {
   SheetTitle,
   SheetHeader,
 } from "@/components/ui/sheet";
-import { addProductsFromElements } from "@/config";
+import { productFormElements } from "@/config";
 import Form from "@/ui/Form";
 import { useEffect, useState } from "react";
 import ImageUpload from "./ImageUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, getProducts } from "./productSlice";
-import AllProduct from "./ProductsList";
+import { addProduct, deleteProduct, getProducts } from "./productSlice";
+import ProductsList from "./ProductsList";
 import { toast } from "@/hooks/use-toast";
+import useProductContext from "../../contexts/ProductsContext";
+import UpdateProduct from "./UpdateProduct";
 
 const initialState = {
   image: null,
@@ -31,9 +33,9 @@ function Products() {
   const [imageFile, setImageFile] = useState(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState("");
   const [isImageLoading, setIsImageLoadin] = useState(false);
-  const [currUpdatedProdId, setCurrUpdatedProdId] = useState(null);
 
   const { isLoading } = useSelector((state) => state.products);
+  const { currUpdatedProdId } = useProductContext();
 
   const dispatch = useDispatch();
 
@@ -57,6 +59,28 @@ function Products() {
     }
   };
 
+  const deleteProductHandler = (currUpdatedProdId) => {
+    dispatch(deleteProduct(currUpdatedProdId)).then((data) => {
+      if (data?.payload?.status) {
+        toast({
+          title: "Product deleted successfully!",
+        });
+        dispatch(getProducts());
+      } else {
+        toast({
+          title: "Something went wrong! Try again.",
+          variant: "destructive",
+        });
+      }
+    });
+  };
+
+  const validateForm = () => {
+    return Object.keys(addProductData)
+      .map((key) => addProductData[key] !== "")
+      .every((item) => item);
+  };
+
   useEffect(
     function () {
       if (uploadedImageUrl)
@@ -75,7 +99,7 @@ function Products() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-        <AllProduct setCurrUpdatedProdId={setCurrUpdatedProdId} />
+        <ProductsList deleteProductHandler={deleteProductHandler} />
       </div>
 
       <Sheet open={openAddProductDialog} onOpenChange={setOpenAddProductDialog}>
@@ -93,18 +117,20 @@ function Products() {
           />
           <div className="py-6">
             <Form
-              formControls={addProductsFromElements}
+              formControls={productFormElements}
               formData={addProductData}
               setFormData={setAddProductData}
               onSubmit={submitHandler}
               buttonText={
                 isImageLoading || isLoading ? "Loading" : "Add Product"
               }
-              disabled={isImageLoading}
+              disabled={!validateForm()}
             />
           </div>
         </SheetContent>
       </Sheet>
+
+      <UpdateProduct />
     </>
   );
 }

@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import useProductContext from "../../contexts/ProductsContext";
 
-function ProductListItem({ product }) {
-  const { image, title, description, price, salePrice } = product;
+function ProductListItem({ product, deleteProductHandler }) {
+  const { image, title, description, price, salePrice, _id } = product;
+  const { setCurrUpdatedProdId, setOpenUpdateProductDialog } =
+    useProductContext();
+
   return (
     <Card className="w-full max-w-sm mx-auto">
       <div className="relative">
@@ -29,8 +33,15 @@ function ProductListItem({ product }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <Button>Edit</Button>
-        <Button>Delete</Button>
+        <Button
+          onClick={() => {
+            setCurrUpdatedProdId(_id);
+            setOpenUpdateProductDialog(true);
+          }}
+        >
+          Edit
+        </Button>
+        <Button onClick={() => deleteProductHandler(_id)}>Delete</Button>
       </CardFooter>
     </Card>
   );
