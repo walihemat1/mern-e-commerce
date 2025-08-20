@@ -100,13 +100,18 @@ const loginUser = async (req, res) => {
 
 // logout
 const logoutUser = async (req, res) => {
-  res.clearCookie("token", "").status(200).json({
-    status: true,
-    message: "Logged out successfully!",
-  });
+  try {
+    res.clearCookie("token", "").status(200).json({
+      status: true,
+      message: "Logged out successfully!",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: false,
+      message: "Something went wrong!",
+    });
+  }
 };
 
-// auth middleware
-const auth = async (req, res, next) => {};
-
-export { registerUser, loginUser, logoutUser, auth };
+export { registerUser, loginUser, logoutUser };

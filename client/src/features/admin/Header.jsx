@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { AlignJustify, LogOut } from "lucide-react";
+import { AlignJustify } from "lucide-react";
+import Logout from "../auth/Logout";
 
 function AdminHeader({ openSidebar, setOpenSidebar }) {
   return (
@@ -12,10 +13,7 @@ function AdminHeader({ openSidebar, setOpenSidebar }) {
         <span className="">Toggle Menu</span>
       </Button>
       <div className="flex flex-1 justify-end">
-        <Button className="inline-flex gap-2 items-center rounded-md px-4 py-2 text-sm font-medium shadow">
-          <LogOut />
-          <span>Logout</span>
-        </Button>
+        <Logout />
       </div>
     </header>
   );

@@ -26,7 +26,7 @@ const initialState = {
 };
 
 function UpdateProduct() {
-  const { currUpdatedProdId } = useProductContext();
+  const { currUpdatedProdId, setCurrUpdatedProdId } = useProductContext();
   const { isLoading, product } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
@@ -43,6 +43,7 @@ function UpdateProduct() {
           dispatch(getProducts());
           setOpenUpdateProductDialog(false);
           setUpdateProductData(initialState);
+          setCurrUpdatedProdId(null);
           toast({
             title: "Product updated successfully!",
           });
@@ -68,7 +69,7 @@ function UpdateProduct() {
     function () {
       setUpdateProductData({ ...product });
     },
-    [product]
+    [product, currUpdatedProdId]
   );
 
   return (

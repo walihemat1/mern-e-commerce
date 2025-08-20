@@ -54,6 +54,22 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/auth/logout",
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
 export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
   try {
     const res = await axios.get("http://localhost:5000/api/auth/check-auth", {
@@ -68,14 +84,6 @@ export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
     throw error.message;
   }
 });
-
-// export const checkAuth = createAsyncThunk("/auth/checkauth", async () => {
-//   const res = await axios.get("http://localhost:5000/api/auth/check-auth", {
-//     withCredentials: true,
-//   });
-
-//   console.log("res", res);
-// });
 
 const authSlice = createSlice({
   name: "auth",
@@ -112,6 +120,18 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.user = null;
         state.error = action.payload?.message;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = false;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload?.message || "Failed to logout";
       })
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;
