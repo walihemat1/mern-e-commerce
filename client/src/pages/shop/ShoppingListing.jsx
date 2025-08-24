@@ -1,5 +1,7 @@
+import ShopListing from "../../features/shop/ShopListing";
+
 function ShoppingListing() {
-  return <div>ShoppingListing</div>;
+  return <ShopListing />;
 }
 
 export default ShoppingListing;
